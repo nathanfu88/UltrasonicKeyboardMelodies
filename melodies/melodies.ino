@@ -67,6 +67,8 @@ byte prevButtonState = LOW;
 byte melody = 0;
 
 void setup() {
+  Serial.begin(9600);
+  
   pinMode(PUSHBUTTON_PIN, INPUT);
 
   // Start off by playing melody 0
@@ -86,6 +88,9 @@ void playMetronome() {
 }
 
 void playMelody(const byte melody) {
+  Serial.print("Playing melody: ");
+  Serial.println(melody);
+  
   byte numNotes = 0;
   // Note delay multiplier that affects "tempo" of melody
   // This was experimentally found and tweaked for each melody
@@ -133,12 +138,14 @@ void loop() {
   // Read pushbutton
   byte newButtonState = digitalRead(PUSHBUTTON_PIN);
   if (newButtonState == HIGH && prevButtonState == LOW) {
+    Serial.println("Button press");
     // Loop through melodies and enforce bounds
     if (++melody > MII) {
       melody = TWINKLE;
     }
 
     playMelody(melody);
+    Serial.println("Melody stop");
   }
 
   prevButtonState = newButtonState;
